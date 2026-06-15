@@ -130,114 +130,170 @@ class _CharacterCreateViewState extends State<CharacterCreateView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // 2. Define os textos baseados no estado (Edição vs Criação)
-    final bool isEditing = widget.character != null;
+Widget build(BuildContext context) {
+  final bool isEditing = widget.character != null;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(isEditing ? 'Editar Personagem' : 'Criar Personagem'),
-      ),
-      body: Padding(
-        padding: AppSpacing.paddingMd,
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              Card(
-                child: Padding(
-                  padding: AppSpacing.paddingMd,
-                  child: Column(
-                    children: [
-                      InputTextField(
-                        label: 'Nome',
-                        controller: _nameController,
-                        validator: (value) {
-                          final text = value?.trim() ?? '';
-                          if (text.isEmpty) return 'O nome é obrigatório';
-                          if (text.length < 2) return 'Nome deve ter ao menos 2 caracteres';
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      DropdownButtonFormField<CharacterClass>(
-                        initialValue: selectedClass,
-                        decoration: const InputDecoration(labelText: 'Classe'),
-                        items: CharacterClass.values.map((e) {
-                          return DropdownMenuItem(
-                            value: e,
-                            child: Text(e.displayName),
-                          );
-                        }).toList(),
-                        onChanged: (v) => setState(() => selectedClass = v!),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      DropdownButtonFormField<CharacterRarity>(
-                        initialValue: selectedRarity,
-                        decoration: const InputDecoration(labelText: 'Raridade'),
-                        items: CharacterRarity.values.map((e) {
-                          return DropdownMenuItem(
-                            value: e,
-                            child: Text(e.displayName),
-                          );
-                        }).toList(),
-                        onChanged: (v) => setState(() => selectedRarity = v!),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      DropdownButtonFormField<CharacterAlignment>(
-                        initialValue: selectedAlignment,
-                        decoration: const InputDecoration(labelText: 'Alinhamento'),
-                        items: CharacterAlignment.values.map((e) {
-                          return DropdownMenuItem(
-                            value: e,
-                            child: Text(e.displayName),
-                          );
-                        }).toList(),
-                        onChanged: (v) => setState(() => selectedAlignment = v!),
-                      ),
-                    ],
-                  ),
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(isEditing ? 'Editar Personagem' : 'Criar Personagem'),
+      centerTitle: true,
+    ),
+
+    body: Padding(
+      padding: AppSpacing.paddingMd,
+      child: Form(
+        key: _formKey,
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          children: [
+
+            // ================= HEADER =================
+            Card(
+              child: Padding(
+                padding: AppSpacing.paddingLg,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    Text(
+                      'Identidade do Jogador',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+
+                    const SizedBox(height: AppSpacing.lg),
+
+                    InputTextField(
+                      label: 'Nome',
+                      controller: _nameController,
+                      validator: (value) {
+                        final text = value?.trim() ?? '';
+                        if (text.isEmpty) return 'O nome é obrigatório';
+                        if (text.length < 2) return 'Nome deve ter ao menos 2 caracteres';
+                        return null;
+                      },
+                    ),
+
+                    const SizedBox(height: AppSpacing.md),
+
+                    _buildDropdown<CharacterClass>(
+                      label: 'Classe',
+                      value: selectedClass,
+                      items: CharacterClass.values,
+                      onChanged: (v) => setState(() => selectedClass = v!),
+                    ),
+
+                    const SizedBox(height: AppSpacing.md),
+
+                    _buildDropdown<CharacterRarity>(
+                      label: 'Raridade',
+                      value: selectedRarity,
+                      items: CharacterRarity.values,
+                      onChanged: (v) => setState(() => selectedRarity = v!),
+                    ),
+
+                    const SizedBox(height: AppSpacing.md),
+
+                    _buildDropdown<CharacterAlignment>(
+                      label: 'Alinhamento',
+                      value: selectedAlignment,
+                      items: CharacterAlignment.values,
+                      onChanged: (v) => setState(() => selectedAlignment = v!),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
-              Card(
-                child: Padding(
-                  padding: AppSpacing.paddingMd,
-                  child: Column(
-                    children: [
-                      _numberField('Level', _levelController, min: 1, max: 80),
-                      const SizedBox(height: AppSpacing.md),
-                      _numberField('Ataque', _attackController, min: 0, max: 99999),
-                      const SizedBox(height: AppSpacing.md),
-                      _numberField('Vida', _healthController, min: 0, max: 99999),
-                      const SizedBox(height: AppSpacing.md),
-                      _numberField('Ameaça', _threatController, min: 0, max: 99999),
-                      const SizedBox(height: AppSpacing.md),
-                      _numberField('Estrelas', _starsController, min: 1, max: 14),
-                    ],
-                  ),
+            ),
+
+            const SizedBox(height: AppSpacing.lg),
+
+            // ================= STATS =================
+            Card(
+              child: Padding(
+                padding: AppSpacing.paddingLg,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    Text(
+                      'Atributos',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+
+                    const SizedBox(height: AppSpacing.lg),
+
+                    _numberField('Level', _levelController, min: 1, max: 80),
+                    const SizedBox(height: AppSpacing.md),
+
+                    _numberField('Ataque', _attackController, min: 0, max: 99999),
+                    const SizedBox(height: AppSpacing.md),
+
+                    _numberField('Vida', _healthController, min: 0, max: 99999),
+                    const SizedBox(height: AppSpacing.md),
+
+                    _numberField('Ameaça', _threatController, min: 0, max: 99999),
+                    const SizedBox(height: AppSpacing.md),
+
+                    _numberField('Estrelas', _starsController, min: 1, max: 14),
+                  ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.lg),
-              ElevatedButton(
+            ),
+
+            const SizedBox(height: AppSpacing.xl),
+
+            // ================= SAVE BUTTON =================
+            SizedBox(
+              height: 54,
+              child: ElevatedButton(
                 onPressed: _save,
-                child: Text(isEditing ? 'Atualizar Dados' : 'Salvar Personagem'),
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppRadius.md),
+                  ),
+                ),
+                child: Text(
+                  isEditing ? 'Atualizar Dados' : 'Salvar Personagem',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-            ],
-          ),
+            ),
+
+            const SizedBox(height: AppSpacing.lg),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _levelController.dispose();
-    _attackController.dispose();
-    _healthController.dispose();
-    _threatController.dispose();
-    _starsController.dispose();
-    super.dispose();
-  }
+// ================= HELPER VISUAL (SEM MUDAR LÓGICA) =================
+
+Widget _buildDropdown<T>({
+  required String label,
+  required T value,
+  required List<T> items,
+  required ValueChanged<T?> onChanged,
+}) {
+  return DropdownButtonFormField<T>(
+    value: value,
+    decoration: InputDecoration(labelText: label),
+    items: items.map((e) {
+      return DropdownMenuItem(
+        value: e,
+        child: Text(e.toString().split('.').last),
+      );
+    }).toList(),
+    onChanged: onChanged,
+  );
+}
 }
