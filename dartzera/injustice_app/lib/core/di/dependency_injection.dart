@@ -4,11 +4,11 @@ import '../../data/repositories/account_repository_impl.dart';
 import '../../data/repositories/account_repository_interface.dart';
 import '../../data/repositories/character_repository_impl.dart';
 import '../../data/repositories/character_repository_interface.dart';
+import '../../data/services/account_firestore_service.dart';
 import '../../data/services/account_local_storage_interface.dart';
-import '../../data/services/account_shared_preferences_impl.dart';
 import '../../data/services/auth_service_interface.dart';
+import '../../data/services/character_firestore_service.dart';
 import '../../data/services/character_local_storage_interface.dart';
-import '../../data/services/character_shared_preferences_impl.dart';
 import '../../data/services/firebase_auth_service_impl.dart';
 import '../../domain/facades/account_facade_usecases_impl.dart';
 import '../../domain/facades/account_facade_usecases_interface.dart';
@@ -32,7 +32,7 @@ void setupDependencyInjection() {
   injector.addSingleton<IAuthService>(FirebaseAuthServiceImpl.new);
 
   // Regristração de dependências para Account
-  injector.addSingleton<IAccountLocalStorage>(AccountSharedPreferencesService.new);
+  injector.addSingleton<IAccountLocalStorage>(AccountFirestoreService.new);
   injector.addSingleton<IAccountRepository>(AccountRepositoryImpl.new);
   
   injector.addSingleton<IAccountFacadeUseCases>(AccountFacadeUsecasesImpl.new);
@@ -42,7 +42,7 @@ void setupDependencyInjection() {
   injector.addSingleton<IUpdateAccountUseCase>(UpdateAccountUseCaseImpl.new);
   
   // Regristração de dependências para Character
-  injector.addSingleton<ICharacterLocalStorage>(CharacterSharedPreferencesService.new);
+  injector.addSingleton<ICharacterLocalStorage>(CharacterFirestoreService.new);
   injector.addSingleton<ICharacterRepository>(CharacterRepositoryImpl.new);
   
   injector.addSingleton<ICharacterFacadeUseCases>(CharacterFacadeUseCasesImpl.new);

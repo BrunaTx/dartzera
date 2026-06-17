@@ -14,7 +14,7 @@ final class AccountRepositoryImpl implements IAccountRepository {
 
   @override
   Future<AccountResult> getAccount() {
-    return _localStorage.getAccount(); 
+    return _localStorage.getAccount();
   }
 
   @override
