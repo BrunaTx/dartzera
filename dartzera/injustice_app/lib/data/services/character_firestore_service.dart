@@ -35,6 +35,7 @@ final class CharacterFirestoreService
     try {
       await _characters.doc(character.id).set(
             CharacterMapper.toMap(character),
+            SetOptions(merge: true),
           );
 
       return Success(character);
@@ -86,8 +87,9 @@ final class CharacterFirestoreService
     Character character,
   ) async {
     try {
-      await _characters.doc(character.id).update(
+      await _characters.doc(character.id).set(
             CharacterMapper.toMap(character),
+            SetOptions(merge: true),
           );
 
       return Success(character);

@@ -21,7 +21,6 @@ class CharactersBody extends StatelessWidget {
     required this.viewModel,
     required this.account,
   });
-  
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +31,9 @@ class CharactersBody extends StatelessWidget {
       final characters = viewModel.charactersState.sortedCharacters.value;
 
       return RefreshIndicator(
-        onRefresh: () async {await viewModel.commands.getAllCharactersCommand.execute();
-  },
+        onRefresh: () async {
+          await viewModel.commands.getAllCharactersCommand.execute();
+        },
         child: CustomScrollView(
           slivers: [
             /// Header
@@ -63,28 +63,30 @@ class CharactersBody extends StatelessWidget {
                 padding: AppSpacing.paddingMd,
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
-  final character = characters[index]; // Esta é a variável correta
-  
-  return CharacterListItem(
-    character: character,
-    onDelete: () async {
-      await viewModel.commands.deleteCharacter(character.id);
-    },
-    onTap: () async {
-      // Use 'character' aqui, que é o que vem da lista
-      final Character? result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => CharacterCreateView(character: character), 
-        ),
-      );
+                    final character =
+                        characters[index]; // Esta é a variável correta
 
-      if (result != null) {
-        await viewModel.commands.updateCharacter(result);
-      }
-    },
-  );
-}, childCount: characters.length),
+                    return CharacterListItem(
+                      character: character,
+                      onDelete: () async {
+                        await viewModel.commands.deleteCharacter(character.id);
+                      },
+                      onTap: () async {
+                        // Use 'character' aqui, que é o que vem da lista
+                        final Character? result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                CharacterCreateView(character: character),
+                          ),
+                        );
+
+                        if (result != null) {
+                          await viewModel.commands.updateCharacter(result);
+                        }
+                      },
+                    );
+                  }, childCount: characters.length),
                 ),
               ),
           ],
@@ -197,9 +199,9 @@ class CharacterListItem extends StatelessWidget {
               false;
         }
       },
-      onDismissed: (direction) {
+      onDismissed: (direction) async {
         if (direction == DismissDirection.endToStart) {
-          onDelete();
+          await onDelete();
         }
       },
       child: Card(
@@ -290,7 +292,6 @@ class FilterPanel extends StatelessWidget {
     return Watch((context) {
       final filtersCount = state.activeFiltersCount.value;
       final isExpanded = state.isFilterPanelExpanded.value;
-
 
       return Container(
         margin: EdgeInsets.only(
