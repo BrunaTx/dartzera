@@ -3,23 +3,16 @@ import 'widgets/characters_app_bar.dart';
 import 'widgets/characters_body.dart';
 import 'widgets/characters_floating_button.dart';
 import '../../../../core/di/dependency_injection.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../../domain/models/account_entity.dart';
 import '../../../../domain/models/character_entity.dart';
-import '../../../../domain/models/extensions/character_ui.dart';
-import '../../../controllers/characters_state_viewmodel.dart';
+import '../../../../domain/models/subaccount_entity.dart';
 import '../../../controllers/characters_view_model.dart';
-import '../../../widgets/account_summary_card.dart';
 import '../../../widgets/app_drawer.dart';
-import '../../../widgets/loading_indicator.dart';
-import '../../../widgets/star_rating.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 /// Página de listagem de personagens
 class CharactersView extends StatefulWidget {
-  final Account account;
+  final SubAccount subAccount;
 
-  const CharactersView({super.key, required this.account});
+  const CharactersView({super.key, required this.subAccount});
 
   @override
   State<CharactersView> createState() => _CharactersViewState();
@@ -27,7 +20,7 @@ class CharactersView extends StatefulWidget {
 
 class _CharactersViewState extends State<CharactersView> {
   late final CharactersViewModel _viewModel;
-  Account get account => widget.account;
+  SubAccount get subAccount => widget.subAccount;
 
   @override
   void initState() {
@@ -164,7 +157,7 @@ class _CharactersViewState extends State<CharactersView> {
       //   ],
       // ),
       drawer: AppDrawer(),
-      body: CharactersBody(account: account, viewModel: _viewModel),
+      body: CharactersBody(subAccount: subAccount, viewModel: _viewModel),
       // body: Watch((context) {
       //   final isLoading =
       //       _viewModel.commands.getAllCharactersCommand.isExecuting.value;

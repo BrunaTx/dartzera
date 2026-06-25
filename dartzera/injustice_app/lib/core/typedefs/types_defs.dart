@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../failure/failure.dart';
 import '../../domain/models/account_entity.dart';
 import '../../domain/models/character_entity.dart';
+import '../../domain/models/subaccount_entity.dart'; 
 
 import '../patterns/result.dart';
 
@@ -10,6 +11,10 @@ typedef VoidResult = Result<void, Failure>;
 typedef AccountResult = Result<Account, Failure>;
 typedef CharacterResult = Result<Character,Failure>;
 typedef ListCharacterResult = Result<List<Character>, Failure>;
+typedef SubAccountResult = Result<SubAccount, Failure>;
+typedef ListSubAccountResult = Result<List<SubAccount>, Failure>;
+typedef SubAccountParams = ({SubAccount subAccount});
+typedef SubAccountIdParams = ({String id});
 
 // typedfs para parâmetros
 typedef AccountParams = ({Account account});
@@ -27,3 +32,5 @@ typedef FormFieldControl = ({
   FocusNode focus,
   TextEditingController controller,
 });
+
+

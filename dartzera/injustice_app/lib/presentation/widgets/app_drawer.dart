@@ -1,24 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:signals_flutter/signals_flutter.dart';
 
 import '../../core/di/dependency_injection.dart';
 import '../../core/routes/app_routes.dart';
-import '../../domain/models/account_entity.dart';
-import '../controllers/account_viewmodel.dart';
 import '../controllers/characters_view_model.dart';
 
-/// Drawer reutilizável para navegação entre páginas
 class AppDrawer extends StatelessWidget {
   AppDrawer({super.key});
 
-  final _vmAccount = injector.get<AccountViewModel>();
   final _vmCharacters = injector.get<CharactersViewModel>();
 
   @override
   Widget build(BuildContext context) {
-    // Obter rota atual para destacar item selecionado
     final currentRoute = GoRouterState.of(context).uri.toString();
 
     return Drawer(
@@ -43,8 +37,8 @@ class AppDrawer extends StatelessWidget {
                 Text(
                   'Injustice 2 Mobile',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                  ),
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
                 ),
               ],
             ),
@@ -75,72 +69,51 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(
-              Icons.person_add,
-              color: currentRoute == AppPaths.accountCreate
+              Icons.switch_account,
+              color: currentRoute == AppPaths.subAccounts
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.onSecondary,
             ),
-            title: Watch(
-              (_) => Text(
-                _vmAccount.accountState.hasAccount.value
-                    ? 'Editar Conta'
-                    : 'Criar Conta',
-                style: currentRoute == AppPaths.accountCreate
-                    ? TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      )
-                    : null,
-              ),
+            title: Text(
+              'Perfis',
+              style: currentRoute == AppPaths.subAccounts
+                  ? TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    )
+                  : null,
             ),
-            selected: currentRoute == AppPaths.accountCreate,
+            selected: currentRoute == AppPaths.subAccounts,
             onTap: () {
               context.pop();
-              if (currentRoute != AppPaths.accountCreate) {
-                context.goNamed(AppRouteNames.accountCreate);
+              if (currentRoute != AppPaths.subAccounts) {
+                context.goNamed(AppRouteNames.subAccounts);
               }
             },
           ),
-          Watch((_) {
-            final hasAccount = _vmAccount.accountState.hasAccount.value;
-
-            return ListTile(
-              leading: Icon(
-                Icons.people,
-                color: !hasAccount
-                    ? Colors.grey
-                    : currentRoute == AppPaths.characters
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.onSecondary,
+          ListTile(
+            leading: Icon(
+              Icons.people,
+              color: currentRoute == AppPaths.characters
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSecondary,
+            ),
+            title: const Text('Personagens'),
+            subtitle: Text(
+              'Selecione um perfil',
+              style: TextStyle(
+                fontSize: 11,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-              title: Text(
-                'Personagens',
-                style: !hasAccount
-                    ? const TextStyle(color: Colors.grey)
-                    : currentRoute == AppPaths.characters
-                    ? TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      )
-                    : null,
-              ),
-              selected: currentRoute == AppPaths.characters,
-              onTap: hasAccount
-                  ? () {
-                      context.pop();
-
-                      Account account = _vmAccount.accountState.state.value!;
-
-                      if (currentRoute != AppPaths.characters) {
-                        context.goNamed(
-                          AppRouteNames.characters,
-                          extra: account,
-                        );
-                      }
-                    }
-                  : null,
-            );
-          }),
+            ),
+            selected: currentRoute == AppPaths.characters,
+            onTap: () {
+              context.pop();
+              if (currentRoute != AppPaths.subAccounts) {
+                context.goNamed(AppRouteNames.subAccounts);
+              }
+            },
+          ),
           ListTile(
             leading: Icon(
               Icons.info,
@@ -167,10 +140,7 @@ class AppDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(
-              Icons.logout,
-              color: Colors.redAccent,
-            ),
+            leading: const Icon(Icons.logout, color: Colors.redAccent),
             title: const Text(
               'Sair da Conta',
               style: TextStyle(
@@ -180,18 +150,9 @@ class AppDrawer extends StatelessWidget {
             ),
             onTap: () async {
               context.pop();
-
-              // 1. Limpa os dados de CONTA e PERSONAGENS da memória local (Signals)
-              _vmAccount.clearAccountData();
               _vmCharacters.clearCharactersData();
-
-              // 2. Termina a sessão do Firebase Auth
               await FirebaseAuth.instance.signOut();
-
-              // 3. Joga o usuário de volta na tela de login
-              if (context.mounted) {
-                context.go('/');
-              }
+              if (context.mounted) context.go('/');
             },
           ),
         ],

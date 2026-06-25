@@ -28,12 +28,13 @@ abstract base class Command<Success, Error>
 
   // Método para executar o comando com tratamento
   Future<Result<Success, Error>> call() async {
-    if (_running.value) return _result.value!; // já está rodando
+    if (_running.value) return execute(); // já está rodando, re-executa diretamente
     _running.value = true; // indica que está rodando
     _result.value = null; // limpa resultado anterior
-    _result.value = await execute(); // executa a ação
+    final executionResult = await execute(); // executa a ação
+    _result.value = executionResult; // atualiza o sinal (effects podem disparar)
     _running.value = false; // indica que terminou
-    return _result.value!;
+    return executionResult; // retorna variável local — imune ao clear() do effect
   }
 
   void clear() {

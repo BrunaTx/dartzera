@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:injustice_app/presentation/views/characters/list_of/create/character_create_view.dart';
 import '../../../../../core/theme/app_theme.dart';
-import '../../../../../domain/models/account_entity.dart';
 import '../../../../../domain/models/character_entity.dart';
+import '../../../../../domain/models/subaccount_entity.dart';
 import '../../../../../domain/models/extensions/character_ui.dart';
 import '../../../../controllers/characters_state_viewmodel.dart';
 import '../../../../controllers/characters_view_model.dart';
@@ -14,12 +14,12 @@ import 'package:signals_flutter/signals_flutter.dart';
 
 class CharactersBody extends StatelessWidget {
   final CharactersViewModel viewModel;
-  final Account account;
+  final SubAccount subAccount;
 
   const CharactersBody({
     super.key,
     required this.viewModel,
-    required this.account,
+    required this.subAccount,
   });
 
   @override
@@ -40,7 +40,7 @@ class CharactersBody extends StatelessWidget {
             SliverToBoxAdapter(
               child: Padding(
                 padding: AppSpacing.paddingMd,
-                child: AccountSummaryCard(account: account),
+                child: AccountSummaryCard(subAccount: subAccount),
               ),
             ),
 

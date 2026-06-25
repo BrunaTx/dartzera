@@ -11,6 +11,10 @@ import 'character_local_storage_interface.dart';
 final class CharacterFirestoreService
     implements ICharacterLocalStorage {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String? _subAccountId;
+
+  @override
+  void setSubAccountId(String id) => _subAccountId = id;
 
   String get _uid {
     final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -22,11 +26,17 @@ final class CharacterFirestoreService
     return uid;
   }
 
-  CollectionReference<Map<String, dynamic>> get _characters =>
-      _firestore
-          .collection('users')
-          .doc(_uid)
-          .collection('characters');
+  CollectionReference<Map<String, dynamic>> get _characters {
+    if (_subAccountId == null) {
+      throw Exception('Nenhuma subconta selecionada.');
+    }
+    return _firestore
+        .collection('users')
+        .doc(_uid)
+        .collection('subaccounts')
+        .doc(_subAccountId)
+        .collection('characters');
+  }
 
   @override
   Future<CharacterResult> saveCharacter(
