@@ -121,7 +121,6 @@ class _SubAccountCreateViewState extends State<SubAccountCreateView> {
                 controller: _nameController,
                 focusNode: _nameFocus,
                 prefixIcon: Icons.person,
-                hint: 'Ex: Minha Conta Principal',
                 validator: (value) => validateField(value, [EmptyStrValidator()]),
               ),
               const SizedBox(height: AppSpacing.md),
@@ -131,7 +130,6 @@ class _SubAccountCreateViewState extends State<SubAccountCreateView> {
                 controller: _emailController,
                 focusNode: _emailFocus,
                 prefixIcon: Icons.email,
-                hint: 'seuemail@exemplo.com',
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) => validateField(value, [
                   EmptyStrValidator(),
@@ -145,7 +143,6 @@ class _SubAccountCreateViewState extends State<SubAccountCreateView> {
                 controller: _displayNameController,
                 focusNode: _displayNameFocus,
                 prefixIcon: Icons.verified_user,
-                hint: 'Como você quer ser chamado',
                 validator: (value) => validateField(value, [EmptyStrValidator()]),
               ),
               const SizedBox(height: AppSpacing.md),
