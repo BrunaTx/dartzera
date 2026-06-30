@@ -11,7 +11,7 @@ import '../../domain/models/account_mapper.dart';
 import 'account_local_storage_interface.dart';
 
 final class AccountSharedPreferencesService implements IAccountLocalStorage {
-  /// 🔐 Gera uma chave de armazenamento única para os dados da conta baseada no UID do Firebase.
+  
   String _getStorageKey() {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     return 'account_data_${uid ?? "guest"}';
@@ -22,7 +22,7 @@ final class AccountSharedPreferencesService implements IAccountLocalStorage {
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      // 🛡️ CORREÇÃO CRÍTICA: Remove apenas a chave da conta atual em vez de dar um .clear() global
+ 
       final key = _getStorageKey();
       await prefs.remove(key);
 
@@ -39,7 +39,7 @@ final class AccountSharedPreferencesService implements IAccountLocalStorage {
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      // Busca usando a chave individual do usuário logado
+    
       final key = _getStorageKey();
       final result = prefs.getString(key);
 
@@ -62,7 +62,7 @@ final class AccountSharedPreferencesService implements IAccountLocalStorage {
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      // Salva usando a chave individual do usuário logado
+    
       final key = _getStorageKey();
       await prefs.setString(key, jsonEncode(AccountMapper.toMap(account)));
       return Success(null);
@@ -75,8 +75,7 @@ final class AccountSharedPreferencesService implements IAccountLocalStorage {
 
   @override
   Future<VoidResult> updateAccount(Account account) {
-    // Para SharedPreferences, o método de atualização é o mesmo que salvar,
-    // pois ele sobrescreve os dados existentes com a mesma chave.
+   
     return saveAccount(account);
   }
 }
