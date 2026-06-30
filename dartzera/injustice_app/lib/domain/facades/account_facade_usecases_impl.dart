@@ -2,8 +2,8 @@ import '../../core/typedefs/types_defs.dart';
 import 'account_facade_usecases_interface.dart';
 import '../usecases/account_usecases_interfaces.dart';
 
-/// implemantação do [IAccountFacadeUseCases] para
-/// chamar os usecases relacionados a Account
+/// implemant. [IAccountFacadeUseCases]
+
 
 final class AccountFacadeUsecasesImpl implements IAccountFacadeUseCases {
   final IGetAccountUseCase _getAccountUseCase;
