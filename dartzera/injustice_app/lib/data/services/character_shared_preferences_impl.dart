@@ -12,8 +12,6 @@ import '../../../core/patterns/result.dart';
 final class CharacterSharedPreferencesService
     implements ICharacterLocalStorage {
   
-  /// 🔐 Gera uma chave de armazenamento única baseada no ID do usuário logado no Firebase.
-  /// Se não houver usuário autenticado, usa o sufixo 'guest' como fallback seguro.
   String _getStorageKey() {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     return 'characters_${uid ?? "guest"}';
@@ -48,7 +46,6 @@ final class CharacterSharedPreferencesService
     try {
       final prefs = await SharedPreferences.getInstance();
       
-      // Obtém a chave individual da conta atual
       final key = _getStorageKey();
       final result = prefs.getString(key);
 
@@ -149,7 +146,7 @@ final class CharacterSharedPreferencesService
     }
   }
 
-  /// Salva os personagens no storage utilizando a chave do usuário correspondente
+ 
   Future<void> _saveCharacters(List<Character> characters) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -157,7 +154,7 @@ final class CharacterSharedPreferencesService
         characters.map((c) => CharacterMapper.toMap(c)).toList(),
       );
       
-      // Salva usando a chave dinâmica da conta atual
+    
       final key = _getStorageKey();
       await prefs.setString(key, jsonString);
     } catch (e) {
