@@ -37,12 +37,11 @@ Future<void> main() async {
 
           final firebaseUser = FirebaseAuth.instance.currentUser;
 
-          // Se existe um usuário no estado local, precisamos validar se ele ainda existe no servidor
           if (firebaseUser != null) {
             return FutureBuilder(
               future: firebaseUser.reload(),
               builder: (context, reloadSnapshot) {
-                // Enquanto verifica com o servidor se a conta é válida, exibe o carregamento
+                
                 if (reloadSnapshot.connectionState == ConnectionState.waiting) {
                   return MaterialApp(
                     debugShowCheckedModeBanner: false,
@@ -54,9 +53,9 @@ Future<void> main() async {
                   );
                 }
 
-                // Se houver erro no reload (ex: user-not-found porque foi excluído no console)
+               
                 if (reloadSnapshot.hasError) {
-                  // Força a higienização completa da memória e desloga o cache local
+              
                   FirebaseAuth.instance.signOut();
                   
                   try {
@@ -74,7 +73,7 @@ Future<void> main() async {
                   );
                 }
 
-                // Usuário validado com sucesso no servidor, segue para o app
+      
                 return MaterialApp.router(
                   debugShowCheckedModeBanner: false,
                   title: 'Injustice App',
@@ -87,8 +86,7 @@ Future<void> main() async {
             );
           }
 
-          // Se nenhum usuário estiver logado localmente, renderiza as rotas padrão (tela de login)
-          // Garantimos que os dados antigos sejam limpos preventivamente
+         
           try {
             injector.get<AccountViewModel>().clearAccountData();
             injector.get<CharactersViewModel>().clearCharactersData();
